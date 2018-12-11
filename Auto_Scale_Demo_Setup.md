@@ -1,7 +1,8 @@
 # Autonomous Data Warehouse Auto Scaling Demo Setup
  
 
-   ![](./images/data-warehouse-cloud-270.png)
+   
+   ![](./images/1.png)
 
 
 December 11, 2018
@@ -24,6 +25,22 @@ The purpose of this document is to help setting up the Autonomous data warehouse
 
 Time to Complete
 Approximately 120 minutes.
+
+Topics covered in this document
+
+**1.Notional Architecture of the Demo**
+
+**2.ADWCS Provisioning**
+
+**3.DBaaS Provisioning**
+
+**4.APEX and ORDS Installation Steps**
+
+**4.Auto Scaling Demo Installation Steps**
+
+## 1.Notional Architecture
+
+![](./images/Notional_Architecure.png)
 
 #### Background
 
@@ -134,7 +151,7 @@ Status: Success displays at the left-most bottom of the New/Select Database Conn
 
 
 
-2. ## DbaaS Provisioning Steps
+2. ## DBaaS Provisioning Steps
 To create database you first need to create VCN (Virtual Cloud Network) if you have already created VCN then you can skip 1-5 steps.
 1.	Open the navigation menu. Under Core Infrastructure, go to Networking and click Virtual Cloud Networks.
  
