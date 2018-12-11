@@ -5,12 +5,13 @@
 
 
 December 11, 2018
+
 Version 1.0
 
-Sambhaw Jain
+- Sambhaw Jain
 (Principal Solution Engineer)
 sambhaw.jain@oracle.com
-Rajesh Khatri
+- Rajesh Khatri
 (Senior Solution Engineer)
 rajesh.khatri@oracle.com
 
@@ -58,8 +59,8 @@ Note:
 If you are a Windows user on 64-bit platform, download the 'Windows 64-bit with JDK 8 included' distribution as it includes the files necessary to run SQL Developer and connect to your Autonomous Data Warehouse database. 
 
 If you are using a SQL Developer version earlier than 18.2, see the documentation topic Connecting with Oracle SQL Developer (earlier than Version 18.2).
--	Have installed PuTTY for Windows. PuTTY is available from many sites, but you can reach the main download site [ Putty ] (http://www.putty.org).
--	Have installed the latest version of Oracle SQL Developer from http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.html
+-	Have installed PuTTY for Windows. PuTTY is available from many sites, but you can reach the main download site [Download putty](http://www.putty.org)
+-	Have installed the latest version of Oracle SQL Developer from [SQL Developer Download](http://www.oracle.com/technetwork/developer-tools/sql-developer/downloads/index.html)
 -	Have one of the supported browsers:
 1.	Microsoft Internet Explorer: version 9 or 10; set Browser Mode to IE9 or IE10
 2.	Mozilla Firefox: version 24 and later
@@ -71,7 +72,7 @@ If you are using a SQL Developer version earlier than 18.2, see the documentatio
 1.	Login to cloud environment, Click Services to show the available services. In the list of available services, select Autonomous Data Warehouse.
 
  
-2.	The console for Autonomous Data Warehouse displays. You can use the List Scope drop-down menu to select a compartment; in this example the gse00014135 (root) compartment is selected. Click Create Autonomous Data Warehouse.
+2.	The console for Autonomous Data Warehouse displays. You can use the List Scope drop-down menu to select a compartment; in this example the gse000#### (root) compartment is selected. Click Create Autonomous Data Warehouse.
 
 3.	In the Create Autonomous Data Warehouse dialog, enter the following information:
 
@@ -203,14 +204,14 @@ cat /etc/oratab
 -	Log in as oracle user sudo su – oracle
 -	Edit .bash_profile. vi ~/.bash_profile
 -	Add below environment variable at the end of the file and save it.
-* export ORACLE_SID=ApexDB 
-* export ORACLE_HOME=/u01/app/oracle/product/12.1.0.2/dbhome_1
-export PATH=$ORACLE_HOME/bin:$PATH
--	Run source command source ~/.bash_profile
+**export ORACLE_SID=ApexDB**
+**export ORACLE_HOME=/u01/app/oracle/product/12.1.0.2/dbhome_1**
+**export PATH=$ORACLE_HOME/bin:$PATH**
+-	Run source command **source ~/.bash_profile**
  
 16.	Now login to sqlplus using below command 
--	sqlplus / as sysdba
--	show pdbs
+-	**sqlplus / as sysdba**
+-	**show pdbs;**
  
 
 17.	Once you we see pdbs. Exit from sqlplus and install APEX and ORDS in Dbaas Instance.
@@ -223,24 +224,24 @@ export PATH=$ORACLE_HOME/bin:$PATH
 -	Login as opc user.
 -	Change user to oracle  and got to oracle home directory as below screen shot
  
-2.	Download and unzip in oracle home directory  APEX http://www.oracle.com/technetwork/developer-tools/apex/downloads/index.html
-3.	cd to apex directory
+2.	Download and unzip in oracle home directory  [APEX](http://www.oracle.com/technetwork/developer-tools/apex/downloads/index.html)
+3.	**cd to apex directory**
 4.	Start SQL*Plus and ensure you are connecting to your PDB and not to the "root" of the container database (APEX   should not be installed at all). Run Below Script 
-sqlplus sys/BEstrO0ng_#11@localhost/pdb1 as sysdba @apexins sysaux sysaux temp /i/ 
+**sqlplus sys/BEstrO0ng_#11@localhost/pdb1 as sysdba @apexins sysaux sysaux temp /i/** 
 5.	Unlock the APEX_PUBLIC_USER account and set the password:
 	alter user apex_public_user identified by BEstrO0ng_#11 account unlock;
 6.	Create the APEX Instance Administration user and set the password
-begin
+**begin
 apex_util.set_security_group_id( 10 );
-apex_util.create_user(p_user_name => 'ADMIN',p_email_address => 'rajesh.khatri@oracle.com',p_web_password => 'BEstrO0ng_#11',p_developer_privs =>'ADMIN' );
+apex_util.create_user(p_user_name => 'ADMIN',p_email_address => '<Enter your Email id>',p_web_password => 'BEstrO0ng_#11',p_developer_privs =>'ADMIN' );
 apex_util.set_security_group_id( null );
 commit;
 end;
-/
+/**
 7.	Run APEX REST configuration, and set the passwords of APEX_REST_PUBLIC_USER and APEX_LISTENER.
-@apex_rest_config_core.sql ./ BEstrO0ng_#11 BEstrO0ng_#11
+**@apex_rest_config_core.sql ./ BEstrO0ng_#11 BEstrO0ng_#11**
 8.	Create a network ACE for APEX (this is used when consuming Web services or sending outbound mail)
-declare
+**declare
 l_acl_path varchar2(4000);
 l_apex_schema varchar2(100);
 begin
@@ -249,7 +250,7 @@ l_apex_schema := c1.schema;
 end loop;sys.dbms_network_acl_admin.append_host_ace(host => '*',ace => xs$ace_type(privilege_list => xs$name_list('connect'),principal_name => l_apex_schema,principal_type => xs_acl.ptype_db));
 commit;
 end;
-/
+/**
 9.	Exit SQL*Plus.
 
 
@@ -292,10 +293,10 @@ end;
 2.	Download and unzip ORDS in oracle home directory http://www.oracle.com/technetwork/developer-tools/rest-dataservices/downloads/index.html
 3.	cd to the directory where you unzipped ORDS (ensure that ords.war is in your current directory)
 4.	Copy the following into the file params/ords_params.properties and replace the contents with the text below (Note:  this is the file ords_params.properties in the "params" subdirectory - a subdirectory of your current working directory)
-db.hostname=apex (Change Hostname for your Dbaas Instance)
-db.port=1521
-- CUSTOMIZE db.servicename (Change service name for your Dbaas Instance. Run “lsnrctl status” to check for pdb1 and give same as servicename)
-db.servicename=pdb1.demosubnet1.vcn1.oraclevcn.com
+**db.hostname=apex** (Change Hostname for your Dbaas Instance)
+**db.port=1521**
+- CUSTOMIZE **db.servicename** (Change service name for your Dbaas Instance. Run “lsnrctl status” to check for pdb1 and give same as servicename)
+**db.servicename=pdb1.demosubnet1.vcn1.oraclevcn.com
 db.username=APEX_PUBLIC_USER
 db.password=BEstrO0ng_#11
 migrate.apex.rest=false
@@ -313,9 +314,9 @@ user.apex.listener.password=BEstrO0ng_#11
 user.apex.restpublic.password=BEstrO0ng_#11
 user.public.password=BEstrO0ng_#11
 user.tablespace.default=SYSAUX
-user.tablespace.temp=TEMP
+user.tablespace.temp=TEMP**
 5.	. Configure and start ORDS in stand-alone mode.  You'll be prompted for the SYS username and SYS password
-java -Dconfig.dir=/home/oracle/ords -jar ords.war install simple –preserveParamFile
+**java -Dconfig.dir=/home/oracle/ords -jar ords.war install simple –preserveParamFile**
 6.	Check access rule in iptables and open port for 80 and 8080
 7.	      iptables -I INPUT 8 -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT -m comment --comment 
  "Required for    APEX."
@@ -323,13 +324,12 @@ java -Dconfig.dir=/home/oracle/ords -jar ords.war install simple –preservePara
 iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
 service iptables save
 8.	Browse below URL to check whether ORDS is up and running
-http://<DbaaS Instance IP address>:8080/ords
+**http://<DbaaS Instance IP address<DbaaS Instance IP address>>:8080/ords**
 9.	Use below credentials to login
-Workspace   : INTERNAL
+**Workspace   : INTERNAL
 	Username    : ADMIN
-	Password     : BEstrO0ng_#11 (Admin password which you set earlier if Admin password does not work reset  password using below step)
-10.	Change your working directory to the apex directory where you unzipped the installation software. Login to sqlPlus   and run @apxchpwd. For more information refer below Url.
-https://community.oracle.com/thread/2332882?start=0&tstart=0 
+	Password     : BEstrO0ng_#11 (Admin password which you set earlier if Admin password does not work reset  password using below step)**
+10.	Change your working directory to the apex directory where you unzipped the installation software. Login to sqlPlus   and run @apxchpwd. For more information refer below Url.[Oracle Community](https://community.oracle.com/thread/2332882?start=0&tstart=0) 
 
  
 11.	**Click sign In**.
@@ -343,14 +343,14 @@ https://community.oracle.com/thread/2332882?start=0&tstart=0
 
  
 
-1.	Set Environment variable in ~./bash_profile
-export ORACLE_UNQNAME=DemoDB_iad1cz (Dbaas unique name/you can check unique name at cd 	/opt/oracle/dcs/commonstore/wallets/tde)
+1.	Set Environment variable in **~./bash_profile**
+**export ORACLE_UNQNAME=DemoDB_iad1cz** (Dbaas unique name/you can check unique name at **cd 	/opt/oracle/dcs/commonstore/wallets/tde**)
 
 2.	Copy ADWC wallet in oracle home directory and unzip.
 3.	Reset the sqlnet.ora file in the APEXDB Server environment to the following. Use WALLET_LOCATION as your ADWC unzip folder name, 
-cd /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin
+**cd /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin**
 
-ENCRYPTION_WALLET_LOCATION=(SOURCE=(METHOD=FILE)(METHOD_DATA=(DIRECTORY=/opt/oracle/dcs/commonstore/wallets/tde/$ORACLE_UNQNAME)))
+**ENCRYPTION_WALLET_LOCATION=(SOURCE=(METHOD=FILE)(METHOD_DATA=(DIRECTORY=/opt/oracle/dcs/commonstore/wallets/tde/$ORACLE_UNQNAME)))
 SQLNET.ENCRYPTION_SERVER=REQUIRED
 SQLNET.CRYPTO_CHECKSUM_SERVER=REQUIRED
 SQLNET.ENCRYPTION_TYPES_SERVER=(AES256,AES192,AES128)
@@ -363,29 +363,29 @@ WALLET_LOCATION = (SOURCE = (METHOD = file) (METHOD_DATA = (DIRECTORY="/home/ora
 SSL_SERVER_DN_MATCH=yes
 SQLNET.WALLET_OVERRIDE=TRUE
 SSL_CLIENT_AUTHENTICATION = FALSE
-SSL_VERSION = 0
+SSL_VERSION = 0**
 
-4. ###	Change u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/tnsnames.ora file as below.  Create entry for your Dbaas PDB and copy ADWC Wallet tnsname.ora entry as below.
-PDB1 =  (DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = myoracledb.demosubnet1.vcn1.oraclevcn.com)(PORT = 1521))    (CONNECT_DATA =      (SERVER = DEDICATED)(SERVICE_NAME = pdb1.demosubnet1.vcn1.oraclevcn.com)))
-adwdb1_high = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_high.adwc.oraclecloud.com))(security=(ssl_server_cert_dn= "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")) )
-adwdb1_low = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_low.adwc.oraclecloud.com))(security=(ssl_server_cert_dn= "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")))
-adwdb1_medium = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_medium.adwc.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")) )
+4. ###	Change **u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/tnsnames.ora** file as below.  Create entry for your Dbaas PDB and copy ADWC Wallet tnsname.ora entry as below.
+- PDB1 =  (DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = myoracledb.demosubnet1.vcn1.oraclevcn.com)(PORT = 1521))    (CONNECT_DATA =      (SERVER = DEDICATED)(SERVICE_NAME = pdb1.demosubnet1.vcn1.oraclevcn.com)))
+- adwdb1_high = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_high.adwc.oraclecloud.com))(security=(ssl_server_cert_dn= "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")) )
+- adwdb1_low = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_low.adwc.oraclecloud.com))(security=(ssl_server_cert_dn= "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")))
+- adwdb1_medium = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_medium.adwc.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")) )
 
-5.	Create password less login add below credential in ADWC wallet location(where you copied your ADWC wallet in oracle home directory) for more information go through below link	 https://docs.oracle.com/cd/B19306_01/network.102/b14266/cnctslsh.htm#g1033548
-mkstore -wrl . -listCredential [password  BEstrO0ng_#11]
-mkstore -wrl  .  -createCredential pdb1 pdbuser  BEstrO0ng_#11 (pdbuser password in Dbaas)
-mkstore -wrl  .  -createCredential adwdb1_high admin BEstrO0ng_#11(ADWC admin password)
-mkstore -wrl  .  -createCredential adwdb1_low admin BEstrO0ng_#11(ADWC admin password)
-mkstore -wrl  .  -createCredential adwdb1_medium admin BEstrO0ng_#11 (ADWC admin password)
+5.	Create password less login add below credential in ADWC wallet location(where you copied your ADWC wallet in oracle home directory) for more information go through below link [Password Less Setup](https://docs.oracle.com/cd/B19306_01/network.102/b14266/cnctslsh.htm#g1033548)
+**mkstore -wrl . -listCredential [password  BEstrO0ng_#11]**
+- **mkstore -wrl  .  -createCredential pdb1 pdbuser  BEstrO0ng_#11 (pdbuser password in Dbaas)**
+- **mkstore -wrl  .  -createCredential adwdb1_high admin BEstrO0ng_#11(ADWC admin password)**
+- **mkstore -wrl  .  -createCredential adwdb1_low admin BEstrO0ng_#11(ADWC admin password)**
+- **mkstore -wrl  .  -createCredential adwdb1_medium admin BEstrO0ng_#11 (ADWC admin password)**
 6.	Create link and check whether password less user is working.
-SQL> sqlplus / as sysdba
-SQL> connect /@pdb1
-SQL> Grant connect, resource,dba to pdbuser;
-SQL> drop database link adwc;
-SQL> create database link adwc connect to admin identified by "ApexDb1234##@" using 'adwdb1_medium’;
+**SQL> sqlplus / as sysdba**
+- **SQL> connect /@pdb1**
+- **SQL> Grant connect, resource,dba to pdbuser;**
+- **SQL> drop database link adwc;**
+- **SQL> create database link adwc connect to admin identified by "ApexDb1234##@" using 'adwdb1_medium’;**
 Note : Admin password should be same as adwcs instance admin password
-SQL> alter system set global_names=FALSE scope=both sid='*’;
-SQL> select * from dual@adwc;
+- **SQL> alter system set global_names=FALSE scope=both sid='*’;**
+- **SQL> select * from dual@adwc;**
 7.	Run pduser user schema from pdb1 to Dbaas new environment.
 8.	Restore ADWCS schema from existing environment in new environment.
 9.	Login to existing environment and Export current workspace from existing environment and import in new environment.
