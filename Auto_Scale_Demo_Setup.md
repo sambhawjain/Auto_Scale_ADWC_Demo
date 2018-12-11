@@ -36,7 +36,7 @@ Topics covered in this document
 
 **4.APEX and ORDS Installation Steps**
 
-**4.Auto Scaling Demo Installation Steps**
+**5.Auto Scaling Demo Installation Steps**
 
 ## 1.Notional Architecture
 
@@ -85,7 +85,7 @@ If you are using a SQL Developer version earlier than 18.2, see the documentatio
 4.	Apple Safari: version 6
 
 
-#### ADWCS Provisioning Steps
+2. ####  ADWCS Provisioning
 1.	Login to cloud environment, Click Services to show the available services. In the list of available services, select Autonomous Data Warehouse.
 
  
@@ -151,7 +151,7 @@ Status: Success displays at the left-most bottom of the New/Select Database Conn
 
 
 
-2. ## DBaaS Provisioning Steps
+3. ## DBaaS Provisioning Steps
 To create database you first need to create VCN (Virtual Cloud Network) if you have already created VCN then you can skip 1-5 steps.
 1.	Open the navigation menu. Under Core Infrastructure, go to Networking and click Virtual Cloud Networks.
  
@@ -236,7 +236,7 @@ cat /etc/oratab
 
 
 
-3. APEX Installation Steps
+4. ### APEX Installation
 1.	Login to DbaaS Instance through Putty.
 -	Login as opc user.
 -	Change user to oracle  and got to oracle home directory as below screen shot
@@ -303,7 +303,7 @@ end;
 
 
 
-4. ### ORDS Installation in Dbaas Instance
+5. ### ORDS Installation in Dbaas Instance
 1.	Login to Dbaas Instance through Putty.
 -	Login as opc user.
 -	Change user to oracle  and got to oracle home directory as below screen shot
@@ -353,18 +353,18 @@ service iptables save
  
 
 
-5. ##	ADWC Scaling Demo Installation
+6. ###	ADWC Scaling Demo Installation
 1.	Login to Dbaas Instance through Putty.
 -	Login as opc user.
 -	Change user to oracle  and got to oracle home directory as below screen shot
 
  
 
-1.	Set Environment variable in **~./bash_profile**
+2.	Set Environment variable in **~./bash_profile**
 **export ORACLE_UNQNAME=DemoDB_iad1cz** (Dbaas unique name/you can check unique name at **cd 	/opt/oracle/dcs/commonstore/wallets/tde**)
 
-2.	Copy ADWC wallet in oracle home directory and unzip.
-3.	Reset the sqlnet.ora file in the APEXDB Server environment to the following. Use WALLET_LOCATION as your ADWC unzip folder name, 
+3.	Copy ADWC wallet in oracle home directory and unzip.
+4.	Reset the sqlnet.ora file in the APEXDB Server environment to the following. Use WALLET_LOCATION as your ADWC unzip folder name, 
 **cd /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin**
 
 **ENCRYPTION_WALLET_LOCATION=(SOURCE=(METHOD=FILE)(METHOD_DATA=(DIRECTORY=/opt/oracle/dcs/commonstore/wallets/tde/$ORACLE_UNQNAME)))
@@ -382,19 +382,19 @@ SQLNET.WALLET_OVERRIDE=TRUE
 SSL_CLIENT_AUTHENTICATION = FALSE
 SSL_VERSION = 0**
 
-4. ###	Change **u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/tnsnames.ora** file as below.  Create entry for your Dbaas PDB and copy ADWC Wallet tnsname.ora entry as below.
+5. ###	Change **u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin/tnsnames.ora** file as below.  Create entry for your Dbaas PDB and copy ADWC Wallet tnsname.ora entry as below.
 - PDB1 =  (DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = myoracledb.demosubnet1.vcn1.oraclevcn.com)(PORT = 1521))    (CONNECT_DATA =      (SERVER = DEDICATED)(SERVICE_NAME = pdb1.demosubnet1.vcn1.oraclevcn.com)))
 - adwdb1_high = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_high.adwc.oraclecloud.com))(security=(ssl_server_cert_dn= "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")) )
 - adwdb1_low = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_low.adwc.oraclecloud.com))(security=(ssl_server_cert_dn= "CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")))
 - adwdb1_medium = (description= (address=(protocol=tcps)(port=1522)(host=adb.us-ashburn-1.oraclecloud.com))(connect_data=(service_name=xnap1jsuz2fjhb3_adwdb1_medium.adwc.oraclecloud.com))(security=(ssl_server_cert_dn="CN=adwc.uscom-east-1.oraclecloud.com,OU=Oracle BMCS US,O=Oracle Corporation,L=Redwood City,ST=California,C=US")) )
 
-5.	Create password less login add below credential in ADWC wallet location(where you copied your ADWC wallet in oracle home directory) for more information go through below link [Password Less Setup](https://docs.oracle.com/cd/B19306_01/network.102/b14266/cnctslsh.htm#g1033548)
+6.	Create password less login add below credential in ADWC wallet location(where you copied your ADWC wallet in oracle home directory) for more information go through below link [Password Less Setup](https://docs.oracle.com/cd/B19306_01/network.102/b14266/cnctslsh.htm#g1033548)
 **mkstore -wrl . -listCredential [password  BEstrO0ng_#11]**
 - **mkstore -wrl  .  -createCredential pdb1 pdbuser  BEstrO0ng_#11 (pdbuser password in Dbaas)**
 - **mkstore -wrl  .  -createCredential adwdb1_high admin BEstrO0ng_#11(ADWC admin password)**
 - **mkstore -wrl  .  -createCredential adwdb1_low admin BEstrO0ng_#11(ADWC admin password)**
 - **mkstore -wrl  .  -createCredential adwdb1_medium admin BEstrO0ng_#11 (ADWC admin password)**
-6.	Create link and check whether password less user is working.
+7.	Create link and check whether password less user is working.
 **SQL> sqlplus / as sysdba**
 - **SQL> connect /@pdb1**
 - **SQL> Grant connect, resource,dba to pdbuser;**
@@ -403,13 +403,13 @@ SSL_VERSION = 0**
 Note : Admin password should be same as adwcs instance admin password
 - **SQL> alter system set global_names=FALSE scope=both sid='*’;**
 - **SQL> select * from dual@adwc;**
-7.	Run pduser user schema from pdb1 to Dbaas new environment.
-8.	Restore ADWCS schema from existing environment in new environment.
-9.	Login to existing environment and Export current workspace from existing environment and import in new environment.
-10.	After importing workspace logout and again login with below credential.
+8.	Run pduser user schema from pdb1 to Dbaas new environment.
+9.	Restore ADWCS schema from existing environment in new environment.
+10.	Login to existing environment and Export current workspace from existing environment and import in new environment.
+11.	After importing workspace logout and again login with below credential.
  Workspace   : pdbuser, Username    : APEXDEMO ,Password     : apexdemo
-11.	Export Application from current environment then import in new environment.
-12.	Copy ADWCS Demo shell script in new environment and run. 
+12.	Export Application from current environment then import in new environment.
+13.	Copy ADWCS Demo shell script in new environment and run. 
 
 
 
