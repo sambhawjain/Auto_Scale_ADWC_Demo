@@ -1,7 +1,7 @@
 # Autonomous Data Warehouse Auto Scaling Demo Setup
  
 
-
+   ![](./images/data-warehouse-cloud-270.png)
 
 
 December 11, 2018
