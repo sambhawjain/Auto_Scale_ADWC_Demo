@@ -2,7 +2,7 @@
  
 
    
-   ![](./images/1.png)
+   ![](./images/1.PNG)
 
 
 December 11, 2018
@@ -40,7 +40,7 @@ Topics covered in this document
 
 ## 1.Notional Architecture
 
-![](./images/Notional_Architecure.png)
+![](./images/Notional_Architecure.PNG)
 
 #### Background
 
