@@ -237,6 +237,9 @@ cat /etc/oratab
 
 
 4. ### APEX Installation
+   
+   Approximately time 30 Minutes.
+   
 1.	Login to DbaaS Instance through Putty.
 -	Login as opc user.
 -	Change user to oracle  and got to oracle home directory as below screen shot
@@ -244,7 +247,11 @@ cat /etc/oratab
 2.	Download and unzip in oracle home directory  [APEX](http://www.oracle.com/technetwork/developer-tools/apex/downloads/index.html)
 3.	**cd to apex directory**
 4.	Start SQL*Plus and ensure you are connecting to your PDB and not to the "root" of the container database (APEX   should not be installed at all). Run Below Script 
-**sqlplus sys/BEstrO0ng_#11@localhost/pdb1 as sysdba @apexins sysaux sysaux temp /i/** 
+-    Enter user name as sqlplus / as sysdba
+-    alter session set container=pdb1;
+-    @apexins sysaux sysaux temp /i/
+-    Wait until you see sql prompt 
+
 5.	Unlock the APEX_PUBLIC_USER account and set the password:
 	alter user apex_public_user identified by BEstrO0ng_#11 account unlock;
 6.	Create the APEX Instance Administration user and set the password
@@ -304,12 +311,24 @@ end;
 
 
 5. ### ORDS Installation in Dbaas Instance
+      
+      Approximately time 20 minutes.
+
 1.	Login to Dbaas Instance through Putty.
 -	Login as opc user.
 -	Change user to oracle  and got to oracle home directory as below screen shot
 2.	Download and unzip ORDS in oracle home directory http://www.oracle.com/technetwork/developer-tools/rest-dataservices/downloads/index.html
 3.	cd to the directory where you unzipped ORDS (ensure that ords.war is in your current directory)
-4.	Copy the following into the file params/ords_params.properties and replace the contents with the text below (Note:  this is the file ords_params.properties in the "params" subdirectory - a subdirectory of your current working directory)
+4.	Check access rule in iptables and open port for 80 and 8080
+5.	      iptables -I INPUT 8 -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT -m comment --comment 
+ "Required for    APEX."
+ service iptables save
+iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
+service iptables save
+
+Note:- Please add ingress rule for your VCN to allow from public internet to 8080 and 1521
+
+6.	Copy the following into the file params/ords_params.properties and replace the contents with the text below (Note:  this is the file ords_params.properties in the "params" subdirectory - a subdirectory of your current working directory)
 **db.hostname=apex** (Change Hostname for your Dbaas Instance)
 **db.port=1521**
 - CUSTOMIZE **db.servicename** (Change service name for your Dbaas Instance. Run “lsnrctl status” to check for pdb1 and give same as servicename)
@@ -332,14 +351,12 @@ user.apex.restpublic.password=BEstrO0ng_#11
 user.public.password=BEstrO0ng_#11
 user.tablespace.default=SYSAUX
 user.tablespace.temp=TEMP**
-5.	. Configure and start ORDS in stand-alone mode.  You'll be prompted for the SYS username and SYS password
+7.	. Configure and start ORDS in stand-alone mode.  You'll be prompted for the SYS username and SYS password
+
+kindly use the DBaaS Admin password as set as above.
+
 **java -Dconfig.dir=/home/oracle/ords -jar ords.war install simple –preserveParamFile**
-6.	Check access rule in iptables and open port for 80 and 8080
-7.	      iptables -I INPUT 8 -p tcp -m state --state NEW -m tcp --dport 8080 -j ACCEPT -m comment --comment 
- "Required for    APEX."
- service iptables save
-iptables -t nat -I PREROUTING -p tcp --dport 80 -j REDIRECT --to-port 8080
-service iptables save
+
 8.	Browse below URL to check whether ORDS is up and running
 **http://<DbaaS Instance IP address<DbaaS Instance IP address>>:8080/ords**
 9.	Use below credentials to login
@@ -364,6 +381,10 @@ service iptables save
 **export ORACLE_UNQNAME=DemoDB_iad1cz** (Dbaas unique name/you can check unique name at **cd 	/opt/oracle/dcs/commonstore/wallets/tde**)
 
 3.	Copy ADWC wallet in oracle home directory and unzip.
+
+-    mkdir wallet_adwc
+-    unzip Wallet_adwapexdemo.zip -d wallet_adwc
+
 4.	Reset the sqlnet.ora file in the APEXDB Server environment to the following. Use WALLET_LOCATION as your ADWC unzip folder name, 
 **cd /u01/app/oracle/product/12.1.0.2/dbhome_1/network/admin**
 
